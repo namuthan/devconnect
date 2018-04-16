@@ -28,12 +28,4 @@ const UserSchema = new Schema({
 
 UserSchema.plugin(uniqueValidator);
 
-UserSchema.methods.generateHash = password => {
-  return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
-};
-
-UserSchema.methods.validPassword = password => {
-  return bcrypt.compareSync(password, this.password);
-};
-
 module.exports = User = mongoose.model("users", UserSchema);

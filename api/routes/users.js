@@ -8,4 +8,10 @@ const userController = require("../controllers/users");
 
 router.post("/register", userController.registerNewUser);
 
+// @route GET api/users/login
+// @desc  Login user / Returning newly created token
+// @access Public
+
+router.post("/login", userController.login);
+
 module.exports = router;
