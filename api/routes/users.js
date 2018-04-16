@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const passport = require("passport");
 const userController = require("../controllers/users");
 
 // @route GET api/users/register
@@ -13,5 +14,7 @@ router.post("/register", userController.registerNewUser);
 // @access Public
 
 router.post("/login", userController.login);
+
+//passport.authenticate("jwt", { session: false })
 
 module.exports = router;
