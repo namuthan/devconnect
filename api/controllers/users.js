@@ -46,22 +46,43 @@ exports.login = (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
 
-  // find user by email
-
+  // find by email
   User.findOne({ email: email })
     .then(user => {
       if (!user) {
         return res.status(404).json({ email: "User not found" });
-      } else {
-        return usersUtils.validatePassword(password, user.password);
       }
+
+      // validate passpord
+      return utils.combineDataWithPromise(
+        user,
+        usersUtils.validatePassword(password, user.password),
+        "user",
+        "isValid"
+      );
     })
-    .then(isValid => {
+    .then(data => {
+      const { user, isValid } = data;
+
       if (!isValid) {
         return res.status(400).json({ password: "Incorrect password" });
-      } else {
-        res.json({ msg: "success" });
       }
+
+      const payload = {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        avatar: user.avatar
+      };
+
+      // create jwt token
+      return usersUtils.createJWT(payload);
+    })
+    .then(token => {
+      res.json({
+        success: true,
+        token: `Bearer ${token}`
+      });
     })
     .catch(err => {
       console.log(err);

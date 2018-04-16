@@ -1,6 +1,7 @@
 const User = require("../models/User");
 const gravatar = require("gravatar");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 exports.newUser = payload => {
   return new Promise((resolve, reject) => {
@@ -35,4 +36,18 @@ exports.generateHashedPassword = password => {
 
 exports.validatePassword = (plainPassword, hashedPassword) => {
   return bcrypt.compare(plainPassword, hashedPassword);
+};
+
+exports.createJWT = (payload, cb) => {
+  return new Promise((resolve, reject) => {
+    jwt.sign(
+      payload,
+      process.env.JWT_SECRET,
+      { expiresIn: 3600 },
+      (err, token) => {
+        if (err) return reject(err);
+        resolve(token);
+      }
+    );
+  });
 };
