@@ -1,10 +1,17 @@
 const express = require("express");
-const app = express();
 const dbUtils = require("./api/utils/database");
 const _ = require("dotenv").config();
+const bodyParser = require("body-parser");
+
 const users = require("./api/routes/users");
 const profiles = require("./api/routes/profiles");
 const posts = require("./api/routes/posts");
+
+const app = express();
+
+//middlewares
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
 // connect to db
 const url = `mongodb://${process.env.MONGO_DB_USERNAME}:${

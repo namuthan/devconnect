@@ -1,7 +1,8 @@
 const mongoose = require("mongoose");
+const User = require("../models/User");
 
 exports.connect = url => {
-  return new Promise(function(resolve, reject) {
+  return new Promise((resolve, reject) => {
     mongoose.connect(url, {}, function(error) {
       if (error) {
         reject(error);
