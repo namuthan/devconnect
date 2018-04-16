@@ -19,5 +19,3 @@ router.post("/register", registerValidator, userController.registerNewUser);
 router.post("/login", loginValidator, userController.login);
 
 module.exports = router;
-
-//passport.authenticate("jwt", { session: false })
