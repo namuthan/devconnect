@@ -128,8 +128,6 @@ exports.addExperience = (req, res) => {
       description: req.body.description
     };
 
-    console.log(` New Experience ${JSON.stringify(newExp)}`);
-
     profile.experience.unshift(newExp);
     profile
       .save()
@@ -142,7 +140,6 @@ exports.addExperience = (req, res) => {
 };
 
 exports.addEducation = (req, res) => {
-  console.log("adding new edu");
   Profile.findOne({ user: req.user.id }).then(profile => {
     const newEducation = {
       school: req.body.school,
@@ -154,8 +151,6 @@ exports.addEducation = (req, res) => {
       description: req.body.description
     };
 
-    // console.log(` New Education ${JSON.stringify(newEducation)}`);
-
     profile.education.unshift(newEducation);
     profile
       .save()
@@ -164,5 +159,57 @@ exports.addEducation = (req, res) => {
         console.log(err);
         res.status(500).json(err);
       });
+  });
+};
+
+exports.deleteExperience = (req, res) => {
+  Profile.findOne({ user: req.user.id })
+    .then(profile => {
+      // Get remove index
+      const removeIndex = profile.experience
+        .map(item => item.id)
+        .indexOf(req.params.exp_id);
+
+      if (removeIndex >= 0) {
+        // Splice out of array
+        profile.experience.splice(removeIndex, 1);
+      }
+
+      //Save
+      return profile.save();
+    })
+    .then(updatedProfile => res.json(updatedProfile))
+    .catch(err => {
+      console.log(err);
+      res.status(404).json(err);
+    });
+};
+
+exports.deleteEducation = (req, res) => {
+  Profile.findOne({ user: req.user.id })
+    .then(profile => {
+      // Get remove index
+      const removeIndex = profile.education
+        .map(item => item.id)
+        .indexOf(req.params.edu_id);
+
+      if (removeIndex >= 0) {
+        // Splice out of array
+        profile.education.splice(removeIndex, 1);
+      }
+
+      //Save
+      return profile.save();
+    })
+    .then(updatedProfile => res.json(updatedProfile))
+    .catch(err => {
+      console.log(err);
+      res.status(404).json(err);
+    });
+};
+
+exports.deleteUserAndProfile = (req, res) => {
+  Profile.findByIdAndRemove({ user: req.user.id }).then(() => {
+    User.findByIdAndRemove(req.user.id).then(() => res.json({ success: true }));
   });
 };
