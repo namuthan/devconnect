@@ -7,6 +7,47 @@ exports.getCurrentUserProfile = (req, res) => {
   const errros = {};
 
   Profile.findOne({ user: req.user.id })
+    .select("-__v")
+    .populate("user", ["name", "avatar"])
+    .then(profile => {
+      if (!profile) {
+        errros.noprofile = "There is no profile for this user";
+        return res.status(404).json(errros);
+      }
+      res.json(profile);
+    })
+    .catch(err => {
+      errros.noprofile = "There is no profile for this user";
+      return res.status(404).json(errros);
+    });
+};
+
+exports.getUserWithHandle = (req, res) => {
+  const errros = {};
+
+  Profile.findOne({ handle: req.params.handle })
+    .select("-__v")
+    .populate("user", ["name", "avatar"])
+    .then(profile => {
+      if (!profile) {
+        errros.noprofile = "There is no profile for this handle";
+        return res.status(404).json(errros);
+      }
+      res.json(profile);
+    })
+    .catch(err => {
+      console.log(err);
+      errros.noprofile = "There is no profile for this handle";
+      return res.status(404).json(errros);
+    });
+};
+
+exports.getProfileForUserWithId = (req, res) => {
+  const errros = {};
+
+  Profile.findOne({ user: req.params.user_id })
+    .select("-__v")
+    .populate("user", ["name", "avatar"])
     .then(profile => {
       if (!profile) {
         errros.noprofile = "There is no profile for this user";
@@ -16,7 +57,27 @@ exports.getCurrentUserProfile = (req, res) => {
     })
     .catch(err => {
       console.log(err);
-      res.status(404).json(err);
+      errros.noprofile = "There is no profile for this user";
+      return res.status(404).json(errros);
+    });
+};
+
+exports.getAllProfiles = (req, res) => {
+  const errros = {};
+
+  Profile.find()
+    .select("-__v")
+    .populate("user", ["name", "avatar"])
+    .then(profiles => {
+      res.json({
+        count: profiles.length,
+        profiles: profiles
+      });
+    })
+    .catch(err => {
+      console.log(err);
+      errros.noprofile = "There are no profiles";
+      return res.status(404).json(errros);
     });
 };
 
@@ -52,5 +113,56 @@ exports.createNewProfile = (req, res) => {
           });
       });
     }
+  });
+};
+
+exports.addExperience = (req, res) => {
+  Profile.findOne({ user: req.user.id }).then(profile => {
+    const newExp = {
+      title: req.body.title,
+      company: req.body.company,
+      location: req.body.location,
+      from: req.body.from,
+      to: req.body.to,
+      current: req.body.current,
+      description: req.body.description
+    };
+
+    console.log(` New Experience ${JSON.stringify(newExp)}`);
+
+    profile.experience.unshift(newExp);
+    profile
+      .save()
+      .then(profile => res.json(profile))
+      .catch(err => {
+        console.log(err);
+        res.status(500).json(err);
+      });
+  });
+};
+
+exports.addEducation = (req, res) => {
+  console.log("adding new edu");
+  Profile.findOne({ user: req.user.id }).then(profile => {
+    const newEducation = {
+      school: req.body.school,
+      degree: req.body.degree,
+      fieldofstudy: req.body.fieldofstudy,
+      from: req.body.from,
+      to: req.body.to,
+      current: req.body.current,
+      description: req.body.description
+    };
+
+    // console.log(` New Education ${JSON.stringify(newEducation)}`);
+
+    profile.education.unshift(newEducation);
+    profile
+      .save()
+      .then(profile => res.json(profile))
+      .catch(err => {
+        console.log(err);
+        res.status(500).json(err);
+      });
   });
 };

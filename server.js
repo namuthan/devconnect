@@ -3,6 +3,7 @@ const dbUtils = require("./api/utils/database");
 const _ = require("dotenv").config();
 const bodyParser = require("body-parser");
 const passport = require("passport");
+const morgan = require("morgan");
 
 const users = require("./api/routes/users");
 const profiles = require("./api/routes/profiles");
@@ -14,6 +15,7 @@ const app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(passport.initialize());
+app.use(morgan("dev"));
 require("./config/passport")(passport);
 
 // connect to db
