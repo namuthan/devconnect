@@ -1,53 +1,73 @@
 import React, { Component } from "react";
-import { Input, Menu, Button } from "semantic-ui-react";
+import { Input, Menu } from "semantic-ui-react";
+
+import { NavButton, MenuItem } from "../reuseable";
+
+import logo from "../../img/deal.png";
+import "./NavBar.css";
 
 class Navbar extends Component {
-  state = {};
+  constructor(props) {
+    super(props);
+    this.state = { fixed: true, activeItem: "home" };
+    this.handleItemClick = this.handleItemClick.bind(this);
+  }
 
-  handleItemClick = (e, { name }) => this.setState({ activeItem: name });
+  handleItemClick = (e, { name }) => {
+    console.log(name);
+    this.setState({ activeItem: name });
+  };
 
   render() {
-    const { activeItem } = this.state;
+    const { fixed, activeItem } = this.state;
 
     return (
       <Menu stackable>
-        <Menu.Item>
-          <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT-bYUFt2GoElBRIIbOMbXnN-CcjA2yuh8LyT6IRJYqAJArvkD2" />
-        </Menu.Item>
         <Menu.Item
-          name="Devhub"
-          active={activeItem === "devhub"}
+          name="logo"
+          active={activeItem === "logo"}
           onClick={this.handleItemClick}
         >
-          Devhub
+          <img src={logo} alt="app logo" />
         </Menu.Item>
 
-        <Menu.Item
-          name="Developers"
+        <MenuItem
+          path="/"
+          name="devhub"
+          title="Devhub"
+          active={activeItem === "devhub"}
+          onClick={this.handleItemClick}
+        />
+
+        <MenuItem
+          path="/developers"
+          name="developers"
+          title="Developers"
           active={activeItem === "developers"}
           onClick={this.handleItemClick}
-        >
-          Developers
-        </Menu.Item>
+        />
 
         <Menu.Menu position="right">
           <Menu.Item>
             <Input className="icon" icon="search" placeholder="Search devhub" />
           </Menu.Item>
-          <Menu.Item
-            name="signup"
-            active={activeItem === "signup"}
-            onClick={this.handleItemClick}
-          >
-            <Button>Log-in</Button>
-          </Menu.Item>
 
-          <Menu.Item
-            name="signup"
-            active={activeItem === "signup"}
-            onClick={this.handleItemClick}
-          >
-            <Button primary>Register</Button>
+          <Menu.Item position="right">
+            <NavButton
+              path="/login"
+              name="Login"
+              active={activeItem === "login"}
+              fixed={fixed}
+              color={"orange"}
+            />
+
+            <NavButton
+              path="/register"
+              name="Register"
+              active={activeItem === "register"}
+              fixed={fixed}
+              color={"teal"}
+            />
           </Menu.Item>
         </Menu.Menu>
       </Menu>

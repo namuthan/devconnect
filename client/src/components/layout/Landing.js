@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Button } from "semantic-ui-react";
+import { NavButton } from "../reuseable";
 
 class Landing extends Component {
   render() {
@@ -13,13 +13,21 @@ class Landing extends Component {
                 <p className="lead">
                   {" "}
                   Create a developer profile/portfolio, share posts and get help
-                  from your fellow developers
+                  from your fellow developers Create a developer
+                  profile/portfolio, share posts and get help from your fellow
+                  developers Create a developer profile/portfolio, share posts
+                  and get help from your fellow developers Create a developer
+                  profile/portfolio, share posts and get help from your fellow
+                  developers
                 </p>
                 <hr />
 
-                <Button primary size="massive">
-                  Get Started
-                </Button>
+                <NavButton
+                  path="/getting-started"
+                  name="Getting Started"
+                  color={"orange"}
+                  size="massive"
+                />
               </div>
             </div>
           </div>
