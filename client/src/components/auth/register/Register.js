@@ -1,5 +1,8 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 import axios from "axios";
+import { connect } from "react-redux";
+import { registeruser } from "../../../actions/authActions";
 
 import logo from "../../../img/deal.png";
 
@@ -65,15 +68,17 @@ class Register extends Component {
     console.log(`New user ${JSON.stringify(newUser)}`);
 
     // submit the form
-    axios
-      .post("/api/users/register", newUser)
-      .then(res => {
-        console.log(res.data);
-      })
-      .catch(err => {
-        console.log(err.response.data);
-        this.setState({ errors: err.response.data });
-      });
+    // axios
+    //   .post("/api/users/register", newUser)
+    //   .then(res => {
+    //     console.log(res.data);
+    //   })
+    //   .catch(err => {
+    //     console.log(err.response.data);
+    //     this.setState({ errors: err.response.data });
+    //   });
+
+    this.props.registeruser(newUser);
   }
 
   checkError(val) {
@@ -92,8 +97,12 @@ class Register extends Component {
     const passwordError = this.checkError(this.state.errors.password);
     const password2Error = this.checkError(this.state.errors.password2);
 
+    const { user } = this.props.auth;
+
     return (
       <div className="login-form">
+        {user ? user.name : null}
+
         <Grid
           textAlign="center"
           style={{ height: "100%" }}
@@ -178,4 +187,13 @@ class Register extends Component {
   }
 }
 
-export default Register;
+Register.propTypes = {
+  registeruser: PropTypes.func.isRequired,
+  auth: PropTypes.object.isRequired
+};
+
+const mapStateToProps = state => ({
+  auth: state.auth
+});
+
+export default connect(mapStateToProps, { registeruser })(Register);
