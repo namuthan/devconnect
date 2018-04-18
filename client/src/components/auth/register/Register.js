@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+import axios from "axios";
+
 import logo from "../../../img/deal.png";
 
 import {
@@ -10,7 +12,8 @@ import {
   Message,
   Segment,
   Icon,
-  Divider
+  Divider,
+  Label
 } from "semantic-ui-react";
 import { Link } from "react-router-dom";
 
@@ -27,13 +30,26 @@ class Register extends Component {
 
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
+    this.isEmpty = this.isEmpty.bind(this);
   }
 
   onChange(e) {
-    console.log(`Calling onChange ${e.target.value}`);
     this.setState({
       [e.target.name]: e.target.value
     });
+  }
+
+  isEmpty(value) {
+    if (
+      value === undefined ||
+      value === null ||
+      (typeof value === "object" && Object.keys(value).length === 0) ||
+      (typeof value === "string" && value.trim().length === 0)
+    ) {
+      return true;
+    }
+
+    return false;
   }
 
   onSubmit(e) {
@@ -41,15 +57,41 @@ class Register extends Component {
 
     const newUser = {
       name: this.state.name,
-      email: this.state.password,
+      email: this.state.email,
       password: this.state.password,
       password2: this.state.password2
     };
 
-    console.log(`${JSON.stringify(newUser)}`);
+    console.log(`New user ${JSON.stringify(newUser)}`);
+
+    // submit the form
+    axios
+      .post("/api/users/register", newUser)
+      .then(res => {
+        console.log(res.data);
+      })
+      .catch(err => {
+        console.log(err.response.data);
+        this.setState({ errors: err.response.data });
+      });
+  }
+
+  checkError(val) {
+    const err = !this.isEmpty(val) ? (
+      <Label basic color="red" pointing="below" style={{ width: "100%" }}>
+        {val}
+      </Label>
+    ) : null;
+
+    return err;
   }
 
   render() {
+    const nameError = this.checkError(this.state.errors.name);
+    const emailError = this.checkError(this.state.errors.email);
+    const passwordError = this.checkError(this.state.errors.password);
+    const password2Error = this.checkError(this.state.errors.password2);
+
     return (
       <div className="login-form">
         <Grid
@@ -63,6 +105,7 @@ class Register extends Component {
             </Header>
             <Form size="large">
               <Segment stacked>
+                {nameError}
                 <Form.Input
                   fluid
                   icon="user"
@@ -72,6 +115,8 @@ class Register extends Component {
                   onChange={this.onChange}
                   name="name"
                 />
+
+                {emailError}
                 <Form.Input
                   fluid
                   icon="user"
@@ -81,6 +126,8 @@ class Register extends Component {
                   onChange={this.onChange}
                   name="email"
                 />
+
+                {passwordError}
                 <Form.Input
                   fluid
                   icon="lock"
@@ -91,6 +138,8 @@ class Register extends Component {
                   onChange={this.onChange}
                   name="password"
                 />
+
+                {password2Error}
                 <Form.Input
                   fluid
                   icon="lock"
@@ -101,11 +150,9 @@ class Register extends Component {
                   onChange={this.onChange}
                   name="password2"
                 />
-
                 <Button onClick={this.onSubmit} color="teal" fluid size="large">
                   Register
                 </Button>
-
                 <Divider horizontal>Or Register with</Divider>
 
                 {/* registeration with social media */}

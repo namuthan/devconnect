@@ -3,6 +3,13 @@ const User = require("../models/User");
 const usersUtils = require("../utils/users");
 const utils = require("../utils/util");
 
+exports.getAllUsers = (req, res) => {
+  User.find()
+    .exec()
+    .then(users => res.json(users))
+    .catch(err => res.status(500).json(err));
+};
+
 exports.registerNewUser = (req, res) => {
   User.findOne({ email: req.body.email })
     .exec()

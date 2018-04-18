@@ -28,7 +28,6 @@ class Login extends Component {
   }
 
   onChange(e) {
-    console.log(`Calling onChange ${e.target.value}`);
     this.setState({
       [e.target.name]: e.target.value
     });
