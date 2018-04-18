@@ -4,11 +4,13 @@ img {
 
 .landing {
   position: relative;
-  background: url("./img/showcase.jpg") no-repeat;
+  /* background: url("./img/JavaScript.jpg") no-repeat; */
+  background: url("https://rihahalim.files.wordpress.com/2015/01/background-2.jpg?w=1180&h=610&crop=1")
+    no-repeat;
   background-size: cover;
   background-position: center;
   height: 100vh;
-  margin-top: -24px;
+  margin-top: -15px;
   margin-bottom: -50px;
 }
 
@@ -36,4 +38,8 @@ img {
 
 .form-control::placeholder {
   color: #bbb !important;
+}
+
+.getting-started {
+  padding: 10em;
 }

@@ -1,11 +1,19 @@
 import React, { Component } from "react";
 import "./App.css";
 
+import Navbar from "./components/layout/Navbar";
+import Footer from "./components/layout/Footer";
+import Landing from "./components/layout/Landing";
+
 class App extends Component {
   render() {
     return (
       <div className="App">
-        <h1>My react app</h1>
+        <Navbar />
+        <div className="containe">
+          <Landing style={{ topPadding: "25px" }} />
+        </div>
+        <Footer />
       </div>
     );
   }
