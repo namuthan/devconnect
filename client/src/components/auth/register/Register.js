@@ -1,11 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import axios from "axios";
+import { withRouter, Link } from "react-router-dom";
 import { connect } from "react-redux";
-import { registeruser } from "../../../actions/authActions";
-
-import logo from "../../../img/deal.png";
-
 import {
   Button,
   Form,
@@ -15,10 +11,12 @@ import {
   Message,
   Segment,
   Icon,
-  Divider,
-  Label
+  Divider
 } from "semantic-ui-react";
-import { Link } from "react-router-dom";
+
+import logo from "../../../img/deal.png";
+import { registeruser } from "../../../actions/authActions";
+import createErrorLabel from "../../../utils/createErrorLabel";
 
 class Register extends Component {
   constructor() {
@@ -33,7 +31,18 @@ class Register extends Component {
 
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
-    this.isEmpty = this.isEmpty.bind(this);
+  }
+
+  componentDidMount() {
+    if (this.props.auth.isAuthenticated) {
+      this.props.history.push("/dashboard");
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.errors) {
+      this.setState({ errors: nextProps.errors });
+    }
   }
 
   onChange(e) {
@@ -42,67 +51,28 @@ class Register extends Component {
     });
   }
 
-  isEmpty(value) {
-    if (
-      value === undefined ||
-      value === null ||
-      (typeof value === "object" && Object.keys(value).length === 0) ||
-      (typeof value === "string" && value.trim().length === 0)
-    ) {
-      return true;
-    }
-
-    return false;
-  }
-
   onSubmit(e) {
     e.preventDefault();
 
-    const newUser = {
-      name: this.state.name,
-      email: this.state.email,
-      password: this.state.password,
-      password2: this.state.password2
-    };
-
-    console.log(`New user ${JSON.stringify(newUser)}`);
-
-    // submit the form
-    // axios
-    //   .post("/api/users/register", newUser)
-    //   .then(res => {
-    //     console.log(res.data);
-    //   })
-    //   .catch(err => {
-    //     console.log(err.response.data);
-    //     this.setState({ errors: err.response.data });
-    //   });
-
-    this.props.registeruser(newUser);
-  }
-
-  checkError(val) {
-    const err = !this.isEmpty(val) ? (
-      <Label basic color="red" pointing="below" style={{ width: "100%" }}>
-        {val}
-      </Label>
-    ) : null;
-
-    return err;
+    this.props.registeruser(
+      {
+        name: this.state.name,
+        email: this.state.email,
+        password: this.state.password,
+        password2: this.state.password2
+      },
+      this.props.history
+    );
   }
 
   render() {
-    const nameError = this.checkError(this.state.errors.name);
-    const emailError = this.checkError(this.state.errors.email);
-    const passwordError = this.checkError(this.state.errors.password);
-    const password2Error = this.checkError(this.state.errors.password2);
-
-    const { user } = this.props.auth;
+    const nameError = createErrorLabel(this.state.errors.name);
+    const emailError = createErrorLabel(this.state.errors.email);
+    const passwordError = createErrorLabel(this.state.errors.password);
+    const password2Error = createErrorLabel(this.state.errors.password2);
 
     return (
       <div className="login-form">
-        {user ? user.name : null}
-
         <Grid
           textAlign="center"
           style={{ height: "100%" }}
@@ -189,11 +159,13 @@ class Register extends Component {
 
 Register.propTypes = {
   registeruser: PropTypes.func.isRequired,
-  auth: PropTypes.object.isRequired
+  auth: PropTypes.object.isRequired,
+  errors: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
-  auth: state.auth
+  auth: state.auth,
+  errors: state.errors
 });
 
-export default connect(mapStateToProps, { registeruser })(Register);
+export default connect(mapStateToProps, { registeruser })(withRouter(Register));

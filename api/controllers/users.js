@@ -57,7 +57,7 @@ exports.login = (req, res) => {
   User.findOne({ email: email })
     .then(user => {
       if (!user) {
-        return res.status(404).json({ email: "User not found" });
+        return res.status(404).json({ email: "Email not found" });
       }
 
       // validate passpord
@@ -83,16 +83,15 @@ exports.login = (req, res) => {
       };
 
       // create jwt token
-      return usersUtils.createJWT(payload);
-    })
-    .then(token => {
-      res.json({
-        success: true,
-        token: `Bearer ${token}`
+      return usersUtils.createJWT(payload).then(token => {
+        res.json({
+          success: true,
+          token: `Bearer ${token}`
+        });
       });
     })
     .catch(err => {
       console.log(err);
-      res.status(500).json(err);
+      return res.status(500).json(err);
     });
 };

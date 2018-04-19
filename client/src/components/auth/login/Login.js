@@ -1,6 +1,7 @@
 import React, { Component } from "react";
-import logo from "../../../img/deal.png";
-
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { Link } from "react-router-dom";
 import {
   Button,
   Form,
@@ -12,7 +13,10 @@ import {
   Icon,
   Divider
 } from "semantic-ui-react";
-import { Link } from "react-router-dom";
+
+import logo from "../../../img/deal.png";
+import createErrorLabel from "../../../utils/createErrorLabel";
+import { loginUser } from "../../../actions/authActions";
 
 class Login extends Component {
   constructor(props) {
@@ -27,6 +31,22 @@ class Login extends Component {
     this.onSubmit = this.onSubmit.bind(this);
   }
 
+  componentDidMount() {
+    if (this.props.auth.isAuthenticated) {
+      this.props.history.push("/dashboard");
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.auth.isAuthenticated) {
+      this.props.history.push("/dashboard");
+    }
+
+    if (nextProps.errors) {
+      this.setState({ errors: nextProps.errors });
+    }
+  }
+
   onChange(e) {
     this.setState({
       [e.target.name]: e.target.value
@@ -36,15 +56,16 @@ class Login extends Component {
   onSubmit(e) {
     e.preventDefault();
 
-    const newUser = {
-      email: this.state.password,
+    this.props.loginUser({
+      email: this.state.email,
       password: this.state.password
-    };
-
-    console.log(`${JSON.stringify(newUser)}`);
+    });
   }
 
   render() {
+    const emailError = createErrorLabel(this.state.errors.email);
+    const passwordError = createErrorLabel(this.state.errors.password);
+
     return (
       <div className="login-form">
         <Grid
@@ -59,6 +80,7 @@ class Login extends Component {
 
             <Form size="large">
               <Segment stacked>
+                {emailError}
                 <Form.Input
                   fluid
                   icon="user"
@@ -68,6 +90,8 @@ class Login extends Component {
                   onChange={this.onChange}
                   name="email"
                 />
+
+                {passwordError}
                 <Form.Input
                   fluid
                   icon="lock"
@@ -107,4 +131,15 @@ class Login extends Component {
   }
 }
 
-export default Login;
+Login.propTypes = {
+  loginUser: PropTypes.func.isRequired,
+  auth: PropTypes.object.isRequired,
+  errors: PropTypes.object.isRequired
+};
+
+const mapStateToProps = state => ({
+  auth: state.auth,
+  errors: state.errors
+});
+
+export default connect(mapStateToProps, { loginUser })(Login);
