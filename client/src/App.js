@@ -18,6 +18,8 @@ import EditProfile from "./components/editProfile/EditProfile";
 import AddExperience from "./components/addCredentials/AddExperience";
 import AddEducation from "./components/addCredentials/AddEducation";
 
+import Profiles from "./components/profiles/Profiles";
+
 // update the state with the current user(if exists ) on every page refresh
 if (localStorage.jwtToken) {
   setAuthToken(localStorage.jwtToken);
@@ -48,6 +50,8 @@ class App extends Component {
               {/* <div className="container"> */}
               <Route exact path="/login" component={Login} />
               <Route exact path="/register" component={Register} />
+              <Route path="/developers" component={Profiles} />
+
               <PrivateRoute exact path="/dashboard" component={Dashboard} />
               <PrivateRoute
                 exact
