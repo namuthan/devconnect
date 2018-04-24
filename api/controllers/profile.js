@@ -209,7 +209,9 @@ exports.deleteEducation = (req, res) => {
 };
 
 exports.deleteUserAndProfile = (req, res) => {
-  Profile.findByIdAndRemove({ user: req.user.id }).then(() => {
-    User.findByIdAndRemove(req.user.id).then(() => res.json({ success: true }));
+  Profile.findOneAndRemove({ user: req.user.id }).then(() => {
+    User.findByIdAndRemove({ _id: req.user.id }).then(() =>
+      res.json({ success: true })
+    );
   });
 };

@@ -11,7 +11,8 @@ import {
   Message,
   Segment,
   Icon,
-  Divider
+  Divider,
+  Popup
 } from "semantic-ui-react";
 
 import logo from "../../../img/deal.png";
@@ -96,14 +97,20 @@ class Register extends Component {
                 />
 
                 {emailError}
-                <Form.Input
-                  fluid
-                  icon="user"
-                  iconPosition="left"
-                  placeholder="E-mail address"
-                  value={this.state.email}
-                  onChange={this.onChange}
-                  name="email"
+                <Popup
+                  trigger={
+                    <Form.Input
+                      fluid
+                      icon="user"
+                      iconPosition="left"
+                      placeholder="E-mail address"
+                      value={this.state.email}
+                      onChange={this.onChange}
+                      name="email"
+                    />
+                  }
+                  content="This site uses Gravatar so if you want a profile image, use a Gravatar email"
+                  position="top center"
                 />
 
                 {passwordError}

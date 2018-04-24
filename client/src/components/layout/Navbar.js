@@ -1,9 +1,10 @@
 import React, { Component } from "react";
-import { Input, Menu } from "semantic-ui-react";
+import { Input, Menu, Image, Dropdown } from "semantic-ui-react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { logoutUser } from "../../actions/authActions";
 
+import { logoutUser } from "../../actions/authActions";
+import { clearCurrentProfile } from "../../actions/profileActions";
 import { NavButton, MenuItem } from "../reuseable";
 import logo from "../../img/deal.png";
 import "./NavBar.css";
@@ -22,7 +23,12 @@ class Navbar extends Component {
 
   onLogoutClick(e) {
     e.preventDefault();
+    this.props.clearCurrentProfile();
     this.props.logoutUser();
+  }
+
+  onProfileClick(e) {
+    e.preventDefault();
   }
 
   render() {
@@ -31,25 +37,28 @@ class Navbar extends Component {
 
     const authLinks = (
       <Menu.Item position="right">
-        <a
-          href="/"
-          onClick={this.onLogoutClick.bind(this)}
-          className="nav-link"
-          style={{ color: "orange" }}
+        <Dropdown
+          item
+          style={{ height: "25px" }}
+          trigger={
+            <span>
+              <Image src={user.avatar} avatar /> {user.name}
+            </span>
+          }
         >
-          <img
-            className="rounded-circle"
-            src={user.avatar}
-            alt={user.name}
-            style={{
-              width: "25px",
-              height: "25px",
-              marginRight: "5px"
-            }}
-            title="You must have a Gravatar connected to your email to display an image"
-          />{" "}
-          Logout
-        </a>
+          <Dropdown.Menu>
+            <Dropdown.Item
+              icon="user"
+              text="Profile"
+              onClick={this.onProfileClick.bind(this)}
+            />
+            <Dropdown.Item
+              icon="sign out"
+              text="Logout"
+              onClick={this.onLogoutClick.bind(this)}
+            />
+          </Dropdown.Menu>
+        </Dropdown>
       </Menu.Item>
     );
 
@@ -101,7 +110,10 @@ class Navbar extends Component {
 
         <Menu.Menu position="right">
           <Menu.Item>
-            <Input className="icon" icon="search" placeholder="Search devhub" />
+            <Input
+              action={{ type: "submit", content: "Go" }}
+              placeholder="Search devhub"
+            />
           </Menu.Item>
           {isAuthenticated ? authLinks : guestLinks}
         </Menu.Menu>
@@ -112,6 +124,7 @@ class Navbar extends Component {
 
 Navbar.propTypes = {
   logoutUser: PropTypes.func.isRequired,
+  clearCurrentProfile: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired
 };
 
@@ -119,4 +132,6 @@ const mapStateToProps = state => ({
   auth: state.auth
 });
 
-export default connect(mapStateToProps, { logoutUser })(Navbar);
+export default connect(mapStateToProps, { logoutUser, clearCurrentProfile })(
+  Navbar
+);
