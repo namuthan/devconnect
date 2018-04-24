@@ -58,7 +58,7 @@ const ProfileItem = ({ profile, history }) => (
       fluid
       link
       onClick={e => {
-        history.push(`/${profile.handle}`);
+        history.push(`/profiles/${profile.handle}`);
       }}
       extra={temp(profile)}
     />

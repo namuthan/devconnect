@@ -62,16 +62,6 @@ class Navbar extends Component {
       </Menu.Item>
     );
 
-    const dashboardLink = (
-      <MenuItem
-        path="/dashboard"
-        name="dashboard"
-        title="Dashboard"
-        active={activeItem === "dashboard"}
-        onClick={this.handleItemClick}
-      />
-    );
-
     const guestLinks = (
       <Menu.Item position="right">
         <NavButton
@@ -125,7 +115,6 @@ class Navbar extends Component {
               placeholder="Search devhub"
             />
           </Menu.Item>
-          {isAuthenticated && dashboardLink}
           {isAuthenticated ? authLinks : guestLinks}
         </Menu.Menu>
       </Menu>

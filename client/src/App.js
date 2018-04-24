@@ -19,6 +19,7 @@ import AddExperience from "./components/addCredentials/AddExperience";
 import AddEducation from "./components/addCredentials/AddEducation";
 
 import Profiles from "./components/profiles/Profiles";
+import Profile from "./components/profile/Profile";
 
 // update the state with the current user(if exists ) on every page refresh
 if (localStorage.jwtToken) {
@@ -75,6 +76,9 @@ class App extends Component {
                 path="/add-education"
                 component={AddEducation}
               />
+
+              <Route exact path="/profiles/:handle" component={Profile} />
+
               <Route path="*" component={Page404} />
               {/* </div> */}
             </Switch>
