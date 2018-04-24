@@ -18,7 +18,7 @@ class MoreInfo extends Component {
 
   render() {
     const {
-      githubusernaem,
+      githubusername,
       location,
       bio,
       skills,
@@ -47,7 +47,7 @@ class MoreInfo extends Component {
                   placeholder="Github user name"
                   name="githubusername"
                   type="text"
-                  value={githubusernaem}
+                  value={githubusername}
                   onChange={onChange}
                 />
               </Form.Field>

@@ -14,6 +14,9 @@ import { setCurrentUser, logoutUser } from "./actions/authActions";
 import { clearCurrentProfile } from "./actions/profileActions";
 import PrivateRoute from "./components/reuseable/PrivateRoute";
 import CreateProfile from "./components/createProfile/CreateProfile";
+import EditProfile from "./components/editProfile/EditProfile";
+import AddExperience from "./components/addCredentials/AddExperience";
+import AddEducation from "./components/addCredentials/AddEducation";
 
 // update the state with the current user(if exists ) on every page refresh
 if (localStorage.jwtToken) {
@@ -51,7 +54,23 @@ class App extends Component {
                 path="/create-profile"
                 component={CreateProfile}
               />
+              <PrivateRoute
+                exact
+                path="/edit-profile"
+                component={EditProfile}
+              />
 
+              <PrivateRoute
+                exact
+                path="/add-experience"
+                component={AddExperience}
+              />
+
+              <PrivateRoute
+                exact
+                path="/add-education"
+                component={AddEducation}
+              />
               <Route path="*" component={Page404} />
               {/* </div> */}
             </Switch>

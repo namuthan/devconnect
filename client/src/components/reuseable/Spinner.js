@@ -5,7 +5,7 @@ const Spinner = ({ label, size, color }) => {
   return (
     <Segment style={{ height: "10em" }}>
       <Dimmer active inverted>
-        <Loader size={size} circular>
+        <Loader size={size}>
           <Label color={color}>Loading Profile for {label}</Label>
         </Loader>
       </Dimmer>

@@ -127,6 +127,7 @@ exports.addExperience = (req, res) => {
       current: req.body.current,
       description: req.body.description
     };
+    console.log(newExp);
 
     profile.experience.unshift(newExp);
     profile

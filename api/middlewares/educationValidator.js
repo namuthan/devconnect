@@ -10,8 +10,7 @@ module.exports = (req, res, next) => {
   req.body.fieldofstudy = !isEmpty(req.body.fieldofstudy)
     ? req.body.fieldofstudy
     : "";
-
-  console.log(`school ${req.body.school}`);
+  req.body.to = !isEmpty(req.body.to) ? req.body.to : "";
 
   if (validator.isEmpty(req.body.school)) {
     errors.school = "School field is required";
@@ -24,6 +23,10 @@ module.exports = (req, res, next) => {
   }
   if (validator.isEmpty(req.body.fieldofstudy)) {
     errors.fieldofstudy = "Field of study date field is required";
+  }
+
+  if (!req.body.current && validator.isEmpty(req.body.to)) {
+    errors.to = "To date field is required when current job is not checked";
   }
 
   if (isEmpty(errors)) {

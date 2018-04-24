@@ -7,6 +7,7 @@ module.exports = (req, res, next) => {
   req.body.title = !isEmpty(req.body.title) ? req.body.title : "";
   req.body.company = !isEmpty(req.body.company) ? req.body.company : "";
   req.body.from = !isEmpty(req.body.from) ? req.body.from : "";
+  req.body.to = !isEmpty(req.body.to) ? req.body.to : "";
 
   if (validator.isEmpty(req.body.title)) {
     errors.title = "Job title field is required";
@@ -16,6 +17,10 @@ module.exports = (req, res, next) => {
   }
   if (validator.isEmpty(req.body.from)) {
     errors.from = "From date field is required";
+  }
+
+  if (!req.body.current && validator.isEmpty(req.body.to)) {
+    errors.to = "To date field is required when current job is not checked";
   }
 
   if (isEmpty(errors)) {

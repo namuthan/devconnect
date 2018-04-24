@@ -33,7 +33,64 @@ export const createProfile = (profileData, history) => dispatch => {
     .post("/api/profiles", profileData)
     .then(res => history.push("/dashboard"))
     .catch(err => {
-      console.log("ERR\n" + JSON.stringify(err.response.data));
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      });
+    });
+};
+
+export const addExperience = (expData, history) => dispatch => {
+  axios
+    .post("/api/profiles/experience", expData)
+    .then(res => history.push("/dashboard"))
+    .catch(err => {
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      });
+    });
+};
+
+export const addEducation = (eduData, history) => dispatch => {
+  axios
+    .post("/api/profiles/education", eduData)
+    .then(res => history.push("/dashboard"))
+    .catch(err => {
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      });
+    });
+};
+
+export const deleteExperience = id => dispatch => {
+  axios
+    .delete(`/api/profiles/experience/${id}`)
+    .then(res =>
+      dispatch({
+        type: GET_PROFILE,
+        payload: res.data
+      })
+    )
+    .catch(err => {
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      });
+    });
+};
+
+export const deleteEducation = (id, history) => dispatch => {
+  axios
+    .delete(`/api/profiles/education/${id}`)
+    .then(res =>
+      dispatch({
+        type: GET_PROFILE,
+        payload: res.data
+      })
+    )
+    .catch(err => {
       dispatch({
         type: GET_ERRORS,
         payload: err.response.data

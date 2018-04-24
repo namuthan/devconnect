@@ -3,10 +3,19 @@ import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 
-import { getCurrentProfile, deleteAccount } from "../../actions/profileActions";
+import {
+  getCurrentProfile,
+  deleteAccount,
+  clearCurrentProfile
+} from "../../actions/profileActions";
+import { logoutUser } from "../../actions/authActions";
+
 import { Spinner } from "../reuseable";
 import NoProfile from "./NoProfile";
 import ProfileActions from "./ProfileActions";
+
+import Experience from "./Experience";
+import Education from "./Education";
 
 class Dashboard extends Component {
   componentDidMount() {
@@ -15,7 +24,10 @@ class Dashboard extends Component {
 
   onDelete() {
     this.props.deleteAccount();
+    this.props.clearCurrentProfile();
+    this.props.logoutUser();
   }
+
   render() {
     const { user } = this.props.auth;
     const { profile, loading } = this.props.profile;
@@ -33,6 +45,11 @@ class Dashboard extends Component {
               <Link to={`/profiles/${profile.handle}`}>{user.name}</Link>
             </p>
             <ProfileActions />
+            {/* Dispay Experience */}
+            <Experience experience={profile.experience} />
+            <br />
+            <Education education={profile.education} />
+
             <div style={{ marginBottom: "60px" }} />
             <button
               onClick={this.onDelete.bind(this)}
@@ -63,9 +80,11 @@ class Dashboard extends Component {
 }
 
 Dashboard.propTypes = {
-  getCurrentProfile: PropTypes.func.isRequired,
   profile: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
+  getCurrentProfile: PropTypes.func.isRequired,
+  logoutUser: PropTypes.func.isRequired,
+  clearCurrentProfile: PropTypes.func.isRequired,
   deleteAccount: PropTypes.func.isRequired
 };
 
@@ -74,6 +93,9 @@ const mapStateToProps = state => ({
   auth: state.auth
 });
 
-export default connect(mapStateToProps, { getCurrentProfile, deleteAccount })(
-  Dashboard
-);
+export default connect(mapStateToProps, {
+  getCurrentProfile,
+  deleteAccount,
+  clearCurrentProfile,
+  logoutUser
+})(Dashboard);
